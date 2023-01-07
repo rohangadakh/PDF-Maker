@@ -1,15 +1,21 @@
 package com.ocr.pdf;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,40 +34,44 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static String path;
-    EditText name, email, searchname;
-    Button btnpdf, btnview;
-    FloatingActionButton add, about, pdf;
+    EditText name, file_name;
+    FloatingActionButton add, open, pdf, setting;
+
     boolean aBoolean = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        add = findViewById(R.id.add);
-        about = findViewById(R.id.about);
-        pdf = findViewById(R.id.pdf);
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE},
+                PackageManager.PERMISSION_GRANTED);
 
+
+        add = findViewById(R.id.add);
+        open = findViewById(R.id.open);
+        pdf = findViewById(R.id.pdf);
+        setting = findViewById(R.id.setting);
 
         name = (EditText) findViewById(R.id.name);
-        email = (EditText) findViewById(R.id.email);
-        btnpdf = (Button) findViewById(R.id.btnpdf);
-        btnview = (Button) findViewById(R.id.btnview);
-        searchname = (EditText) findViewById(R.id.searchname);
+        file_name = (EditText) findViewById(R.id.filename);
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if(aBoolean){
-                    about.show();
+                    open.show();
                     pdf.show();
+                    setting.show();
                     aBoolean = false;
                 }
                 else
                 {
-                    about.hide();
+                    open.hide();
                     pdf.hide();
+                    setting.hide();
                     aBoolean = true;
                 }
             }
@@ -70,50 +80,87 @@ public class MainActivity extends AppCompatActivity {
     pdf.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String username = name.getText().toString();
-            String useremail = email.getText().toString();
 
-            String savePDfname = searchname.getText().toString();
-            String path = getExternalFilesDir(null).toString()+savePDfname+".pdf";
-            File file = new File(path);
+            String savePDfname = file_name.getText().toString();
 
-            if(!file.exists())
+            if(savePDfname.equals(""))
             {
+                Toast.makeText(MainActivity.this, "Enter filename", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+
+                String username = name.getText().toString();
+
+                if(username.equals(""))
+                {
+                    username = " ";
+                }
+
+                String path = getExternalFilesDir(null).toString()+savePDfname+".pdf";
+                File file = new File(path);
+
+                if(!file.exists())
+                {
+                    try {
+                        file.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                Document document = new Document(PageSize.A4);
                 try {
-                    file.createNewFile();
-                } catch (IOException e) {
+                    PdfWriter.getInstance(document, new FileOutputStream(file.getAbsoluteFile()));
+                } catch (DocumentException | FileNotFoundException e) {
                     e.printStackTrace();
                 }
-            }
+                document.open();
 
-            Document document = new Document(PageSize.A4);
-            try {
-                PdfWriter.getInstance(document, new FileOutputStream(file.getAbsoluteFile()));
-            } catch (DocumentException | FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            document.open();
+                Font myfont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.NORMAL);
+                Paragraph paragraph = new Paragraph();
+                paragraph.add(new Paragraph(username, myfont));
 
-            Font myfont = new Font(Font.FontFamily.TIMES_ROMAN, 24, Font.BOLD);
-            Paragraph paragraph = new Paragraph();
-            paragraph.add(new Paragraph("User Name : "+username, myfont));
-            paragraph.add(new Paragraph("\n"));
-            paragraph.add(new Paragraph("User email : "+useremail, myfont));
-
-            try {
-                document.add(paragraph);
-            } catch (DocumentException e) {
-                e.printStackTrace();
+                try {
+                    document.add(paragraph);
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+                document.close();
+                Toast.makeText(MainActivity.this, "PDF Created", Toast.LENGTH_SHORT).show();
             }
-            document.close();
-            Toast.makeText(MainActivity.this, "PDF Created", Toast.LENGTH_SHORT).show();
+        }
+    });
+
+    open.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            opn();
+        }
+    });
+
+    setting.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            setting();
         }
     });
 
     }
 
-    public void snd(View view) {
-        Intent i = new Intent(MainActivity.this,secondAct.class);
-        startActivity(i);
+    public void setting()
+    {
+        Intent intent = new Intent(MainActivity.this,secondAct.class);
+        startActivity(intent);
+    }
+
+    public void opn() {
+        Intent intent = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            intent = new Intent(Intent.ACTION_VIEW, MediaStore.Downloads.EXTERNAL_CONTENT_URI);
+        }
+        assert intent != null;
+        intent.setType("*/*");
+        this.startActivity(intent);
     }
 }

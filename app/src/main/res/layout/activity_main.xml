@@ -6,96 +6,74 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/setting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/add"
-        android:src="@drawable/ic_baseline_add_24"
-        android:tint="@color/black"
-        android:backgroundTint="@color/white"
-        android:layout_alignParentBottom="true"
+        android:visibility="gone"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="30dp"
-        android:layout_marginRight="30dp"
-        />
-
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="240dp"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/ic_baseline_settings_24"
+        android:tint="@color/black"
+        app:fabSize="mini" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/pdf"
-        android:onClick="snd"
         android:layout_width="wrap_content"
+
+        android:visibility="gone"
         android:layout_height="wrap_content"
-        android:layout_above="@id/add"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:visibility="gone"
-        android:layout_marginEnd="29dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="170dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="135dp"
         android:backgroundTint="@color/white"
-        android:src="@drawable/ic_launcher_background"
+        android:src="@drawable/ic_baseline_picture_as_pdf_24"
         android:tint="@color/black"
-        app:fabSize="auto" />
+        app:fabSize="mini" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/about"
+        android:id="@+id/add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/about"
         android:layout_alignParentEnd="true"
-        app:fabSize="mini"
-        android:visibility="gone"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="99dp"
+        android:layout_marginEnd="23.5dp"
+        android:layout_marginBottom="71dp"
         android:backgroundTint="@color/white"
-        android:src="@drawable/ic_baseline_info_24"
+        android:src="@drawable/ic_baseline_add_24"
         android:tint="@color/black" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/open"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="187dp"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/ic_baseline_file_open_24"
+        android:tint="@color/black"
+        app:fabSize="mini" />
+
+    <EditText
+        android:id="@+id/filename"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:hint="filename" />
 
     <EditText
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:hint="Write your name"
-        />
-
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:hint="Write your email"
-        android:layout_below="@+id/name"
-        />
-
-
-    <Button
-        android:id="@+id/btnpdf"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:hint="Convert to PDF"
-        android:layout_below="@+id/email"
-        />
-
-    <Button
-        android:id="@+id/btnview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:hint="View PDF"
-        android:layout_below="@+id/btnpdf"
-        />
-
-    <EditText
-        android:id="@+id/searchname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:hint="Enter Filename"
-        android:layout_below="@+id/btnview"
-        />
+        android:layout_marginTop="100dp"
+        android:hint="enter the text" />
 
 </RelativeLayout>
